@@ -1,0 +1,22 @@
+  [vetorial] errou: Até que altitude o motor trabalha sem precisar de ajuste na potência?  esperado [54], veio [12, 34, 20]
+  [vetorial] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [73, 22, 22]
+  [vetorial] errou: Quantas vezes posso dar partida seguida no motor?  esperado [54], veio [48, 22, 12]
+  [vetorial] errou: O motor está fazendo um barulho estranho, quais as causas possíveis?  esperado [76], veio [32, 54, 44]
+  [vetorial] errou: Motor esquentando demais, o que devo verificar?  esperado [76], veio [73, 26, 72]
+  [vetorial] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [47, 68, 47]
+  [vetorial] errou: Liguei o motor e ele nem gira, nem sem carga. O que checar?  esperado [76], veio [6, 17, 31]
+vetorial  hit@3 = 6/13 (46%)   MRR@10 = 0.39
+
+  [bm25] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [34, 27, 26]
+  [bm25] errou: Quantas vezes posso dar partida seguida no motor?  esperado [54], veio [57, 44, 30]
+  [bm25] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [33, 33, 33]
+bm25      hit@3 = 10/13 (77%)   MRR@10 = 0.78
+
+  [hibrida] errou: Até que altitude o motor trabalha sem precisar de ajuste na potência?  esperado [54], veio [20, 55, 17]
+  [hibrida] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [47, 33, 34]
+  [hibrida] errou: O motor está fazendo um barulho estranho, quais as causas possíveis?  esperado [76], veio [54, 20, 17]
+  [hibrida] errou: Motor esquentando demais, o que devo verificar?  esperado [76], veio [59, 6, 54]
+  [hibrida] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [33, 47, 33]
+  [hibrida] errou: Liguei o motor e ele nem gira, nem sem carga. O que checar?  esperado [76], veio [6, 54, 19]
+hibrida   hit@3 = 7/13 (54%)   MRR@10 = 0.55
+

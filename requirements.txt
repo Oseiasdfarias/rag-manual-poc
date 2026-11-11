@@ -1,0 +1,5 @@
+pypdf
+chromadb
+sentence-transformers
+rank-bm25
+openai
