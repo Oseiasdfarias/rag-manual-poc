@@ -1,0 +1,20 @@
+# experimento: secao (trechos por seção)
+# 77 páginas, 256 trechos
+  [vetorial] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [47, 22, 22]
+  [vetorial] errou: Quantas vezes posso dar partida seguida no motor?  esperado [54], veio [48, 22, 47]
+  [vetorial] errou: O motor está fazendo um barulho estranho, quais as causas possíveis?  esperado [76], veio [54, 33, 47]
+  [vetorial] errou: Motor esquentando demais, o que devo verificar?  esperado [76], veio [47, 47, 73]
+  [vetorial] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [33, 33, 34]
+  [vetorial] errou: Liguei o motor e ele nem gira, nem sem carga. O que checar?  esperado [76], veio [33, 47, 29]
+vetorial  hit@3 = 7/13 (54%)   MRR@10 = 0.51
+
+  [bm25] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [27, 34, 26]
+  [bm25] errou: Quantas vezes posso dar partida seguida no motor?  esperado [54], veio [57, 30, 44]
+  [bm25] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [33, 70, 33]
+bm25      hit@3 = 10/13 (77%)   MRR@10 = 0.75
+
+  [hibrida] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [47, 72, 34]
+  [hibrida] errou: O motor está fazendo um barulho estranho, quais as causas possíveis?  esperado [76], veio [33, 33, 54]
+  [hibrida] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [33, 33, 70]
+  [hibrida] errou: Liguei o motor e ele nem gira, nem sem carga. O que checar?  esperado [76], veio [54, 6, 22]
+hibrida   hit@3 = 9/13 (69%)   MRR@10 = 0.66
