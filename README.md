@@ -1,13 +1,60 @@
-# PoC: RAG sobre manual de manutenção
+<div align="center">
 
-**Problema:** técnicos perdem tempo procurando informação em manuais longos.
-**O que foi feito:** busca vetorial, por palavra (BM25) e híbrida (RRF) sobre o *Manual Geral de Instalação, Operação e Manutenção de Motores Elétricos* da WEG (seção em português), com respostas citando a página e recusa quando a informação não está no manual.
+<img src="assets/logo.svg" width="360" alt="rag-manual-poc logo" />
 
-Código escrito passo a passo, sem LangChain, para enxergar cada etapa (extração com pypdf, trechos de 800 caracteres, embeddings multilíngues, Chroma, BM25, fusão RRF).
+**Busca e perguntas sobre manual de manutenção, com resposta citando a página**
 
-## Resultado
-15 perguntas de teste escritas a partir do manual (2 sem resposta no documento, 13 avaliadas na busca).
-O conjunto é um **rascunho pendente de revisão do Oséias** (ver `GOLDEN_REVISAO.md`).
+[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![ChromaDB](https://img.shields.io/badge/vector%20store-ChromaDB-orange.svg)](https://www.trychroma.com/)
+[![sentence-transformers](https://img.shields.io/badge/embeddings-sentence--transformers-blue.svg)](https://www.sbert.net/)
+[![BM25](https://img.shields.io/badge/busca-BM25-lightgrey.svg)](https://github.com/dorianbrown/rank_bm25)
+[![Ollama](https://img.shields.io/badge/LLM%20local-Ollama-black.svg)](https://ollama.com/)
+[![Status: PoC](https://img.shields.io/badge/status-PoC-yellow.svg)](#limitações)
+
+</div>
+
+---
+
+## Problema
+
+Técnicos perdem tempo procurando informação em manuais longos.
+
+## O que este projeto faz
+
+Busca vetorial, por palavra (BM25) e híbrida (RRF) sobre o *Manual Geral de Instalação, Operação e Manutenção de Motores Elétricos* da WEG (seção em português). As respostas citam a página e o sistema recusa quando a informação não está no manual.
+
+O código foi escrito passo a passo, sem LangChain, para enxergar cada etapa: extração com pypdf, trechos de 800 caracteres, embeddings multilíngues, Chroma, BM25 e fusão RRF.
+
+## Arquitetura
+
+Ingestão (uma vez):
+
+```mermaid
+flowchart LR
+    A[PDF do manual] --> B[Texto por página]
+    B --> C[Trechos<br/>800 caracteres, sobreposição 150]
+    C --> D[Embeddings]
+    D --> E[(Chroma)]
+    C --> F[(Índice BM25)]
+```
+
+Consulta (a cada pergunta):
+
+```mermaid
+flowchart LR
+    Q[Pergunta] --> V[Busca vetorial]
+    Q --> K[Busca BM25]
+    V --> R[Fusão RRF]
+    K --> R
+    R --> P[Prompt com as páginas]
+    P --> L[LLM]
+    L --> S[Resposta com citação<br/>ou recusa]
+```
+
+## Resultados
+
+Conjunto de teste inicial com 15 perguntas (em revisão), escritas a partir do manual: 2 sem resposta no documento e 13 avaliadas na busca (ver `GOLDEN_REVISAO.md`).
 
 Configuração padrão (trechos de 800 caracteres, sobreposição de 150, modelo `paraphrase-multilingual-MiniLM-L12-v2`, 265 trechos em 77 páginas):
 
@@ -30,19 +77,21 @@ Cada pergunta vale cerca de 8 pontos percentuais. Diferença de 1 ou 2 perguntas
 | Outro modelo de embedding | não feito | | | | Pulado para economizar disco. |
 | Reranker (cross-encoder) | não feito | | | | Pulado: exigiria baixar outro modelo. Próximo passo. |
 
-Leitura honesta: a busca por palavra (BM25) foi igual ou melhor que a híbrida no MRR em todas as configurações, e a híbrida só ganhou no hit@3 da configuração padrão (10 contra 9). Com 13 perguntas, não dá para afirmar que a híbrida é melhor aqui. O que se vê com clareza: a vetorial sozinha é a mais fraca em todos os casos (0,39 a 0,55 de MRR).
+**Leitura honesta:** a busca por palavra (BM25) foi igual ou melhor que a híbrida no MRR em todas as configurações, e a híbrida só ganhou no hit@3 da configuração padrão (10 contra 9). Com 13 perguntas, não dá para afirmar que a híbrida é melhor aqui, porque um acerto a mais é ruído. O que se vê com clareza: a vetorial sozinha é a mais fraca em todos os casos (0,39 a 0,55 de MRR).
 Nesta amostra, a sobreposição de 150 caracteres ajudou a busca vetorial e a híbrida (sem ela, hit@3 cai de 7 para 6 e de 10 para 7).
 
 ### Geração das respostas
+
 Modelo local `qwen2.5:1.5b` (Ollama), busca híbrida, 5 trechos, temperatura 0. Avaliação manual (rascunho, em `results/respostas.md`):
 
 - 4 de 13 corretas, 1 parcial, 8 erradas.
 - Citou a página certa no texto: 4 de 13.
 - Recusa correta nas 2 sem resposta: 2 de 2.
 - 5 das 8 erradas foram **falsas recusas** ("Não encontrei isso no manual") mesmo quando a página certa estava nos trechos.
-- A página certa estava entre os 5 trechos em 10 das 13 perguntas, mas o modelo só acertou 4 (mais 1 parcial). Um modelo de 1,5 bilhão de parâmetros é fraco em português e em seguir o prompt; o resultado de geração diz mais sobre o modelo do que sobre a busca.
+- A página certa estava entre os 5 trechos em 10 das 13 perguntas, mas o modelo só acertou 4 (mais 1 parcial). O gargalo da geração é o modelo pequeno: um modelo de 1,5 bilhão de parâmetros é fraco em português e em seguir o prompt. O resultado de geração diz mais sobre o modelo do que sobre a busca.
 
-## O que aprendi
+### O que aprendi
+
 - **Principais causas de erro na busca** (híbrida, configuração padrão: 3 erros):
   - Vocabulário diferente do manual: "protetor contra ferrugem" contra "inibidor de oxidação" (página 20 nunca apareceu); "barulho estranho" contra "ruído elevado/anormal"; "mancal esquentando" contra "aquecimento do mancal".
   - A tabela "Problemas x Soluções" (página 76) é cortada em 5 trechos e só o primeiro leva o título. Os outros viram listas soltas de causas, sem o nome do problema, e perdem para páginas de acoplamento e alinhamento (33) que repetem as palavras "motor" e "mancal".
@@ -55,19 +104,8 @@ Modelo local `qwen2.5:1.5b` (Ollama), busca híbrida, 5 trechos, temperatura 0. 
   - O número da página do PDF (índice) é diferente do impresso: página impressa = índice + 156.
 - **Geração:** o prompt manda recusar quando não achar, e o modelo pequeno recusa até quando o trecho certo está lá. As duas perguntas sem resposta foram recusadas corretamente, mas ao custo de falsas recusas nas outras.
 
-## Limitações
-- Trechos não atravessam páginas.
-- Conjunto de teste pequeno (13 perguntas avaliáveis); serve para comparar, não para medir precisão real. **O conjunto foi rascunhado e ainda está pendente de revisão** do Oséias.
-- 4 das 13 perguntas caem na mesma página (76), o que pesa nos números.
-- **Sem reranker** e sem outro modelo de embedding (para economizar disco).
-- Geração avaliada com um modelo local pequeno (`qwen2.5:1.5b`), então a nota de geração é pessimista; a avaliação manual também é rascunho, não foi conferida no PDF original.
-- Extração do PDF sem tratamento de tabelas, cabeçalhos e rodapés.
-- O PDF usado é só a seção em português (77 páginas) do manual trilíngue.
-
-## Próximos passos para virar produto
-Reranker (cross-encoder sobre os 20 candidatos da híbrida), limpeza de cabeçalho e rodapé, tratamento de tabelas (manter o título da tabela em cada trecho), expansão de consulta com sinônimos do jargão técnico, modelo de geração maior, controle de acesso por documento, mais perguntas de teste vindas de usuários reais, monitoramento de custo e de respostas sem fonte.
-
 ## Como rodar
+
 ```bash
 uv venv && source .venv/bin/activate        # ou: python3 -m venv .venv
 uv pip install torch --index-url https://download.pytorch.org/whl/cpu   # torch só CPU (menor)
@@ -86,10 +124,70 @@ w.write("data/manual.pdf")
 ```
 
 Depois:
+
 ```bash
-python ingest.py data/manual.pdf
-python eval.py
+python ingest.py data/manual.pdf     # extrai, divide em trechos, gera embeddings e indexa
+python eval.py                       # mede vetorial, bm25 e híbrida
 LLM_BASE_URL=http://localhost:11434/v1 LLM_API_KEY=ollama LLM_MODEL=qwen2.5:1.5b python gerar_respostas.py
 ```
 
+O `ask.py` aceita qualquer API compatível com OpenAI. Para usar a OpenAI, defina `LLM_API_KEY` (sua chave) e `LLM_MODEL`; para o Ollama, use as variáveis do exemplo acima.
+
 `gerar_respostas.py` roda o `ask.py` para as 15 perguntas e grava `results/respostas.md`. Saídas dos experimentos em `results/`.
+
+## Estrutura do projeto
+
+```
+rag-manual-poc/
+├── assets/logo.svg        # logo
+├── data/                  # coloque aqui manual.pdf (não versionado)
+├── results/               # saídas dos experimentos e respostas geradas
+├── ingest.py              # PDF -> trechos -> embeddings -> Chroma + BM25
+├── search.py              # busca vetorial, bm25 e híbrida (RRF)
+├── ask.py                 # pergunta -> prompt com páginas -> LLM
+├── eval.py                # hit@k e MRR sobre o conjunto de teste
+├── gerar_respostas.py     # roda o ask.py nas 15 perguntas
+├── config.py              # tamanho do trecho, sobreposição, modelo
+├── golden.csv             # conjunto de teste inicial
+├── GOLDEN_REVISAO.md      # notas para revisar o conjunto de teste
+├── requirements.txt
+└── LICENSE
+```
+
+## Como a avaliação funciona
+
+O `golden.csv` usa `;` como separador e tem duas colunas: `pergunta` e `paginas` (páginas corretas separadas por `|`; `0` quando o manual não tem a resposta).
+
+- **hit@3:** a pergunta conta como acerto se alguma página correta aparece entre os 3 primeiros resultados.
+- **MRR@10:** média de 1 dividido pela posição da primeira página correta nos 10 primeiros resultados (0 se não aparecer).
+
+## Limitações
+
+- Trechos não atravessam páginas.
+- Conjunto de teste pequeno (13 perguntas avaliáveis); serve para comparar, não para medir precisão real. O conjunto ainda está em revisão.
+- 4 das 13 perguntas caem na mesma página (76), o que pesa nos números.
+- **Sem reranker** e sem outro modelo de embedding (para economizar disco).
+- Geração avaliada com um modelo local pequeno (`qwen2.5:1.5b`), então a nota de geração é pessimista; a avaliação manual também é rascunho, não foi conferida no PDF original.
+- Extração do PDF sem tratamento de tabelas, cabeçalhos e rodapés.
+- O PDF usado é só a seção em português (77 páginas) do manual trilíngue.
+
+## Próximos passos
+
+- Reranker (cross-encoder sobre os 20 candidatos da híbrida).
+- Modelo de embedding multilíngue melhor (por exemplo, multilingual-e5).
+- Dividir por seção, para que a tabela de problemas e soluções mantenha o título em cada trecho.
+- Limpeza de cabeçalho e rodapé e tratamento de tabelas.
+- Expansão de consulta com sinônimos do jargão técnico.
+- Modelo de geração maior.
+- Controle de acesso por documento.
+- Mais perguntas de teste vindas de usuários reais e monitoramento de custo e de respostas sem fonte.
+
+## Licença
+
+O código é distribuído sob a licença [MIT](LICENSE). O manual da WEG não está incluído neste repositório e pertence à WEG.
+
+## Autor
+
+**Oséias Farias**
+
+[LinkedIn](https://linkedin.com/in/oseiasfarias) · [GitHub](https://github.com/Oseiasdfarias)
