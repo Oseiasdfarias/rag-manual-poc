@@ -3,7 +3,7 @@
 **Este conjunto é um RASCUNHO para o Oséias revisar e reescrever com as próprias palavras.**
 Foi escrito antes de rodar a avaliação (as perguntas não foram ajustadas depois de ver os resultados).
 
-Atenção ao número de página: é o **índice do PDF usado pelo `ingest.py`** (começa em 1), não o número impresso no rodapé do manual.
+Atenção ao número de página: é o **índice do PDF usado pelo `rag-manual ingest`** (começa em 1), não o número impresso no rodapé do manual.
 O `data/manual.pdf` é só a seção em português do manual trilíngue da WEG (páginas 157 a 233 do original). Por isso: **página impressa = índice + 156**.
 
 Observação: 4 das 13 perguntas com resposta caem na mesma página (76, tabela de problemas e soluções). Se quiser variar mais, troque alguma.
