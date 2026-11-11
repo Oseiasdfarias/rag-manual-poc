@@ -3,3 +3,7 @@ db/
 chunks.json
 __pycache__/
 data/*.pdf
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.cache/
