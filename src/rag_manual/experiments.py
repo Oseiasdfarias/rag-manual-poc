@@ -9,7 +9,7 @@ from typing import Any
 
 from rag_manual.application.evaluation import EvaluateRetrieval
 from rag_manual.composition import build_ingest, build_retrievers
-from rag_manual.config import E5_EMBEDDING_MODEL, RERANKER_MODEL, Settings
+from rag_manual.config import BASE_EMBEDDING_MODEL, E5_EMBEDDING_MODEL, RERANKER_MODEL, Settings
 from rag_manual.infrastructure.golden_csv import load_golden_cases
 from rag_manual.reporting import format_metrics
 
@@ -23,7 +23,12 @@ class Experiment:
 
 # A base é sempre a configuração original: trechos fixos 800/150, MiniLM, sem reranker.
 E5 = E5_EMBEDDING_MODEL
-BASE = {"chunker": "fixed", "chunk_size": 800, "chunk_overlap": 150}
+BASE = {
+    "chunker": "fixed",
+    "chunk_size": 800,
+    "chunk_overlap": 150,
+    "embedding_model": BASE_EMBEDDING_MODEL,
+}
 
 EXPERIMENTS: tuple[Experiment, ...] = (
     Experiment("base", "trechos fixos 800/150, MiniLM", dict(BASE)),

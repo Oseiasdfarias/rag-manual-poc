@@ -1,19 +1,31 @@
+# experimento: base (trechos fixos 800/150, MiniLM)
+# 77 páginas, 265 trechos
   [vetorial] errou: Até que altitude o motor trabalha sem precisar de ajuste na potência?  esperado [54], veio [34, 12, 33]
   [vetorial] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [22, 54, 22]
   [vetorial] errou: Quantas vezes posso dar partida seguida no motor?  esperado [54], veio [48, 22, 22]
   [vetorial] errou: Motor esquentando demais, o que devo verificar?  esperado [76], veio [68, 26, 72]
   [vetorial] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [33, 70, 33]
   [vetorial] errou: Como se faz a medição da resistência de isolamento do motor?  esperado [23, 24], veio [25, 20, 59]
-vetorial  hit@3 = 7/13 (54%)   MRR@10 = 0.45
+vetorial     hit@3 = 7/13 (54%)   MRR@10 = 0.45
 
   [bm25] errou: Até que altitude o motor trabalha sem precisar de ajuste na potência?  esperado [54], veio [45, 51, 20]
   [bm25] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [27, 26, 71]
   [bm25] errou: Quantas vezes posso dar partida seguida no motor?  esperado [54], veio [57, 44, 44]
   [bm25] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [33, 70, 33]
-bm25      hit@3 = 9/13 (69%)   MRR@10 = 0.68
+bm25         hit@3 = 9/13 (69%)   MRR@10 = 0.68
 
   [hibrida] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [47, 33, 34]
   [hibrida] errou: O motor está fazendo um barulho estranho, quais as causas possíveis?  esperado [76], veio [54, 33, 33]
   [hibrida] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [33, 33, 70]
-hibrida   hit@3 = 10/13 (77%)   MRR@10 = 0.62
+hibrida      hit@3 = 10/13 (77%)   MRR@10 = 0.62
 
+  [reranker] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [22, 22, 23]
+  [reranker] errou: O motor está fazendo um barulho estranho, quais as causas possíveis?  esperado [76], veio [32, 54, 40]
+  [reranker] errou: Motor esquentando demais, o que devo verificar?  esperado [76], veio [24, 54, 36]
+reranker     hit@3 = 10/13 (77%)   MRR@10 = 0.67
+
+  [vet+reranker] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [22, 22, 23]
+  [vet+reranker] errou: O motor está fazendo um barulho estranho, quais as causas possíveis?  esperado [76], veio [32, 54, 54]
+  [vet+reranker] errou: Motor esquentando demais, o que devo verificar?  esperado [76], veio [54, 54, 52]
+  [vet+reranker] errou: Liguei o motor e ele nem gira, nem sem carga. O que checar?  esperado [76], veio [54, 54, 22]
+vet+reranker hit@3 = 9/13 (69%)   MRR@10 = 0.68

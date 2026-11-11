@@ -48,3 +48,14 @@ def test_format_metrics_mostra_falhas_e_resumo():
     text = format_metrics(metrics)
     assert "[bm25] errou: Pergunta?  esperado [54], veio [1, 2, 3]" in text
     assert "hit@3 = 9/13 (69%)   MRR@10 = 0.68" in text
+
+
+def test_padrao_e_o_melhor_medido_e_a_base_continua_fixa():
+    from rag_manual.config import BASE_EMBEDDING_MODEL, E5_EMBEDDING_MODEL, Settings
+
+    settings = Settings.from_env({})
+    assert settings.embedding_model == E5_EMBEDDING_MODEL
+    assert settings.retriever == "vetorial"
+    assert settings.reranker_model == ""
+    base = find_experiments(["base"])[0]
+    assert base.overrides["embedding_model"] == BASE_EMBEDDING_MODEL

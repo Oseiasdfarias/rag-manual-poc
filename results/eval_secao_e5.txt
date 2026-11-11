@@ -1,0 +1,23 @@
+# experimento: secao_e5 (trechos por seção + multilingual-e5-small)
+# 77 páginas, 256 trechos
+  [vetorial] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [22, 59, 13]
+vetorial     hit@3 = 12/13 (92%)   MRR@10 = 0.84
+
+  [bm25] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [27, 34, 26]
+  [bm25] errou: Quantas vezes posso dar partida seguida no motor?  esperado [54], veio [57, 30, 44]
+  [bm25] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [33, 70, 33]
+bm25         hit@3 = 10/13 (77%)   MRR@10 = 0.75
+
+  [hibrida] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [27, 31, 26]
+  [hibrida] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [33, 47, 23]
+  [hibrida] errou: Liguei o motor e ele nem gira, nem sem carga. O que checar?  esperado [76], veio [54, 54, 6]
+hibrida      hit@3 = 10/13 (77%)   MRR@10 = 0.75
+
+  [reranker] errou: Motor esquentando demais, o que devo verificar?  esperado [76], veio [54, 26, 59]
+  [reranker] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [20, 33, 33]
+reranker     hit@3 = 11/13 (85%)   MRR@10 = 0.71
+
+  [vet+reranker] errou: Motor esquentando demais, o que devo verificar?  esperado [76], veio [52, 54, 54]
+  [vet+reranker] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [20, 33, 59]
+  [vet+reranker] errou: Liguei o motor e ele nem gira, nem sem carga. O que checar?  esperado [76], veio [54, 54, 6]
+vet+reranker hit@3 = 10/13 (77%)   MRR@10 = 0.68

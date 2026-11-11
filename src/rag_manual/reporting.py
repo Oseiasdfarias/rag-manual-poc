@@ -14,7 +14,7 @@ def format_metrics(metrics: RetrievalMetrics) -> str:
         for f in metrics.failures
     ]
     lines.append(
-        f"{metrics.strategy:9s} hit@{metrics.k} = {metrics.hits}/{metrics.total} "
+        f"{metrics.strategy:12s} hit@{metrics.k} = {metrics.hits}/{metrics.total} "
         f"({metrics.hit_rate:.0%})   MRR@{metrics.depth} = {metrics.mrr:.2f}\n"
     )
     return "\n".join(lines)

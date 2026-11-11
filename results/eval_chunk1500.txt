@@ -1,3 +1,5 @@
+# experimento: chunk1500 (trechos de 1500)
+# 77 páginas, 144 trechos
   [vetorial] errou: Até que altitude o motor trabalha sem precisar de ajuste na potência?  esperado [54], veio [12, 11, 35]
   [vetorial] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [22, 47, 35]
   [vetorial] errou: Quantas vezes posso dar partida seguida no motor?  esperado [54], veio [48, 22, 12]
@@ -5,18 +7,25 @@
   [vetorial] errou: Motor esquentando demais, o que devo verificar?  esperado [76], veio [26, 72, 47]
   [vetorial] errou: Liguei o motor e ele nem gira, nem sem carga. O que checar?  esperado [76], veio [17, 31, 72]
   [vetorial] errou: Como se faz a medição da resistência de isolamento do motor?  esperado [23, 24], veio [25, 44, 73]
-vetorial  hit@3 = 6/13 (46%)   MRR@10 = 0.42
+vetorial     hit@3 = 6/13 (46%)   MRR@10 = 0.42
 
   [bm25] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [26, 47, 33]
   [bm25] errou: Quantas vezes posso dar partida seguida no motor?  esperado [54], veio [57, 45, 44]
   [bm25] errou: Motor esquentando demais, o que devo verificar?  esperado [76], veio [26, 6, 54]
   [bm25] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [33, 70, 47]
-bm25      hit@3 = 9/13 (69%)   MRR@10 = 0.72
+bm25         hit@3 = 9/13 (69%)   MRR@10 = 0.72
 
   [hibrida] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [47, 33, 72]
   [hibrida] errou: O motor está fazendo um barulho estranho, quais as causas possíveis?  esperado [76], veio [54, 17, 54]
   [hibrida] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [33, 34, 47]
   [hibrida] errou: Liguei o motor e ele nem gira, nem sem carga. O que checar?  esperado [76], veio [54, 6, 22]
   [hibrida] errou: Como se faz a medição da resistência de isolamento do motor?  esperado [23, 24], veio [25, 73, 44]
-hibrida   hit@3 = 8/13 (62%)   MRR@10 = 0.61
+hibrida      hit@3 = 8/13 (62%)   MRR@10 = 0.61
 
+  [reranker] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [26, 22, 47]
+  [reranker] errou: Motor esquentando demais, o que devo verificar?  esperado [76], veio [24, 52, 54]
+reranker     hit@3 = 11/13 (85%)   MRR@10 = 0.82
+
+  [vet+reranker] errou: O motor está fazendo um barulho estranho, quais as causas possíveis?  esperado [76], veio [58, 54, 74]
+  [vet+reranker] errou: Liguei o motor e ele nem gira, nem sem carga. O que checar?  esperado [76], veio [54, 6, 22]
+vet+reranker hit@3 = 11/13 (85%)   MRR@10 = 0.81

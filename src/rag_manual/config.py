@@ -7,8 +7,9 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
-DEFAULT_EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+BASE_EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 E5_EMBEDDING_MODEL = "intfloat/multilingual-e5-small"
+DEFAULT_EMBEDDING_MODEL = E5_EMBEDDING_MODEL  # melhor nas medições (docs/experimentos.md)
 RERANKER_MODEL = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
 
 
@@ -18,6 +19,7 @@ class Settings:
     golden_path: Path = Path("golden.csv")
     index_dir: Path = Path("db")
     collection: str = "manual"
+    retriever: str = "vetorial"  # busca usada para responder: vetorial, bm25, hibrida, reranker
     chunker: str = "fixed"  # "fixed" (tamanho fixo) ou "section" (por seção)
     chunk_size: int = 800  # tamanho máximo do trecho, em caracteres
     chunk_overlap: int = 150  # caracteres repetidos entre trechos vizinhos
@@ -47,6 +49,7 @@ class Settings:
             golden_path=Path(env.get("RAG_GOLDEN", str(base.golden_path))),
             index_dir=Path(env.get("RAG_INDEX_DIR", str(base.index_dir))),
             collection=env.get("RAG_COLLECTION", base.collection),
+            retriever=env.get("RAG_RETRIEVER", base.retriever),
             chunker=env.get("RAG_CHUNKER", base.chunker),
             chunk_size=int(env.get("RAG_CHUNK_SIZE", base.chunk_size)),
             chunk_overlap=int(env.get("RAG_CHUNK_OVERLAP", base.chunk_overlap)),

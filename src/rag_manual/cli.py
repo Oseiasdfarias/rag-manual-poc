@@ -25,6 +25,7 @@ from rag_manual.reporting import format_answers_markdown, format_metrics
 def _add_config_options(parser: argparse.ArgumentParser) -> None:
     group = parser.add_argument_group("configuração (sobrepõe as variáveis de ambiente)")
     group.add_argument("--index-dir", type=Path, help="pasta dos índices (padrão: db)")
+    group.add_argument("--retriever", help="busca usada para responder (padrão: vetorial)")
     group.add_argument("--chunker", choices=sorted(CHUNKERS), help="como dividir o texto")
     group.add_argument("--chunk-size", type=int, help="tamanho do trecho, em caracteres")
     group.add_argument("--overlap", type=int, help="sobreposição entre trechos, em caracteres")
@@ -42,6 +43,7 @@ def _settings_from(args: argparse.Namespace) -> Settings:
     settings = Settings.from_env()
     overrides = {
         "index_dir": args.index_dir,
+        "retriever": args.retriever,
         "chunker": args.chunker,
         "chunk_size": args.chunk_size,
         "chunk_overlap": args.overlap,

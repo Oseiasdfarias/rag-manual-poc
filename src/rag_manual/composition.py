@@ -47,7 +47,11 @@ def build_ingest(settings: Settings) -> IngestManual:
 
 
 def build_retrievers(settings: Settings, with_reranker: bool | None = None) -> dict[str, Retriever]:
-    """Todas as estratégias de busca, pelo nome. O reranker entra se estiver configurado."""
+    """Todas as estratégias de busca, pelo nome.
+
+    Com reranker configurado entram também "reranker" (híbrida + reranker, a busca usada para
+    responder) e "vet+reranker" (só a vetorial + reranker, para comparar).
+    """
     vector = VectorRetriever(
         build_embedder(settings), ChromaVectorStore(settings.chroma_path, settings.collection)
     )
@@ -57,14 +61,19 @@ def build_retrievers(settings: Settings, with_reranker: bool | None = None) -> d
     use_reranker = bool(settings.reranker_model) if with_reranker is None else with_reranker
     if use_reranker and settings.reranker_model:
         reranker = CrossEncoderReranker(settings.reranker_model)
-        retrievers["reranker"] = RerankingRetriever(hybrid, reranker, settings.rerank_candidates)
+        candidates = settings.rerank_candidates
+        retrievers["reranker"] = RerankingRetriever(hybrid, reranker, candidates)
+        retrievers["vet+reranker"] = RerankingRetriever(vector, reranker, candidates)
     return retrievers
 
 
 def build_default_retriever(settings: Settings) -> Retriever:
-    """A busca usada para responder: híbrida, com reranker se estiver configurado."""
-    retrievers = build_retrievers(settings)
-    return retrievers.get("reranker", retrievers["hibrida"])
+    """A busca escolhida em `settings.retriever`."""
+    name = settings.retriever
+    retrievers = build_retrievers(settings, with_reranker="reranker" in name)
+    if name not in retrievers:
+        raise ValueError(f"Busca desconhecida ou sem reranker configurado: {name!r}.")
+    return retrievers[name]
 
 
 def build_answerer(settings: Settings) -> AnswerQuestion:

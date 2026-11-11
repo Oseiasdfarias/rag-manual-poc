@@ -1,0 +1,26 @@
+# experimento: e5 (base com multilingual-e5-small)
+# 77 páginas, 265 trechos
+  [vetorial] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [22, 13, 53]
+vetorial     hit@3 = 12/13 (92%)   MRR@10 = 0.87
+
+  [bm25] errou: Até que altitude o motor trabalha sem precisar de ajuste na potência?  esperado [54], veio [45, 51, 20]
+  [bm25] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [27, 26, 71]
+  [bm25] errou: Quantas vezes posso dar partida seguida no motor?  esperado [54], veio [57, 44, 44]
+  [bm25] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [33, 70, 33]
+bm25         hit@3 = 9/13 (69%)   MRR@10 = 0.68
+
+  [hibrida] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [27, 31, 47]
+  [hibrida] errou: O mancal está esquentando, o que pode ser?  esperado [60, 76], veio [70, 47, 23]
+  [hibrida] errou: Liguei o motor e ele nem gira, nem sem carga. O que checar?  esperado [76], veio [54, 54, 6]
+hibrida      hit@3 = 10/13 (77%)   MRR@10 = 0.80
+
+  [reranker] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [22, 27, 26]
+  [reranker] errou: O motor está fazendo um barulho estranho, quais as causas possíveis?  esperado [76], veio [54, 40, 54]
+  [reranker] errou: Motor esquentando demais, o que devo verificar?  esperado [76], veio [24, 54, 36]
+reranker     hit@3 = 10/13 (77%)   MRR@10 = 0.67
+
+  [vet+reranker] errou: Com que frequência devo passar de novo o protetor contra ferrugem na ponta do eixo de um motor parado no estoque?  esperado [20], veio [22, 27, 52]
+  [vet+reranker] errou: O motor está fazendo um barulho estranho, quais as causas possíveis?  esperado [76], veio [54, 40, 54]
+  [vet+reranker] errou: Motor esquentando demais, o que devo verificar?  esperado [76], veio [54, 36, 52]
+  [vet+reranker] errou: Liguei o motor e ele nem gira, nem sem carga. O que checar?  esperado [76], veio [54, 54, 6]
+vet+reranker hit@3 = 9/13 (69%)   MRR@10 = 0.70
